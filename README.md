@@ -43,6 +43,6 @@ Some additional functions were also added either for completeness or for testing
 
 # Tests
 
-Each test not only tests each individual function but also all the requirement satisfications specified in the specification and also the interface. Each of the tests for each contract has a `Base` contract used to instantiate variables and set up appropriate constants. This has the form of `Base*Test` which inherits from the `Test` contract inside the `forge-std` library.
+Each test not only tests each individual function but also all the requirements specified in the specification and also the interface. Each of the tests for each contract has a `Base` contract used to instantiate variables and set up appropriate constants. This has the form of `Base*Test` which inherits from the `Test` contract inside the `forge-std` library.
 
 A secondary contract which inherits from the `Base` contract is then defined solely for the purposes of testing. The contract is in the form `*Test` and all the functions listed in the contract will be in the form of `function test*()`.
