@@ -6,6 +6,8 @@ import "../interfaces/IERC20.sol";
 import "../interfaces/ITicketNFT.sol";
 import "../interfaces/ISecondaryMarket.sol";
 import "../interfaces/IPrimaryMarket.sol";
+// import test from forge
+import "../../lib/forge-std/src/Test.sol";
 
 contract SecondaryMarket is ISecondaryMarket {
     // Define the variables
@@ -49,8 +51,6 @@ contract SecondaryMarket is ISecondaryMarket {
     }
 
     function purchase(uint256 ticketID, string calldata name) external {
-        // Check that ticket is owned by secondary market
-        require(_ticketNFT.holderOf(ticketID) == address(this), "ticket not owned by secondary market");
         // Checks that the ticket is listed
         require(_ticketListed[ticketID], "ticket not listed");
         // Checks that the buyer has enough balance
@@ -74,12 +74,14 @@ contract SecondaryMarket is ISecondaryMarket {
     }
 
     function delistTicket(uint256 ticketID) external {
-        // Checks that the ticket is owned by the seller
-        require(_ticketNFT.holderOf(ticketID) == msg.sender, "not the owner of the ticket");
+        // Checks that the ticket is owned by the seller or holderOf or by _ticketSeller
+        require(_ticketNFT.holderOf(ticketID) == msg.sender || _ticketSeller[ticketID] == msg.sender, "not the owner of the ticket");
         // Checks that the ticket is listed
         require(_ticketListed[ticketID], "ticket not listed");
         // Delists the ticket
         _ticketListed[ticketID] = false;
+        // Transfers the ticket back to the seller
+        _ticketNFT.transferFrom(address(this), msg.sender, ticketID);
         emit Delisting(ticketID);
     }
 

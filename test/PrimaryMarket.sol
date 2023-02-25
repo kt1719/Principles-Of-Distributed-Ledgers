@@ -77,4 +77,28 @@ contract PrimaryMarketTest is BasePrimaryMarketTest {
         vm.expectRevert("number of tickets exceeded");
         primaryMarket.purchase("alice");
     }
+
+    function testChangeTicketNFT() public {
+        vm.prank(address(this));
+        ITicketNFT ticketNFTTest = new TicketNFT(primaryMarket);
+        primaryMarket.changeTicketNFT(ticketNFTTest);
+    }
+
+    function testChangeTicketNFTUnauthorized() public {
+        ITicketNFT ticketNFTTest = new TicketNFT(primaryMarket);
+        vm.prank(bob);
+        vm.expectRevert("only admin can change payment token");
+        primaryMarket.changeTicketNFT(ticketNFTTest);
+    }
+
+    function testChangeNumTickets() public {
+        vm.prank(address(this));
+        primaryMarket.changeNumTickets(1000);
+    }
+
+    function testChangeNumTicketsUnauthorized() public {
+        vm.prank(bob);
+        vm.expectRevert("only admin can change number of tickets");
+        primaryMarket.changeNumTickets(1000);
+    }
 }
